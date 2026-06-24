@@ -1,0 +1,81 @@
+{{ partial "header.html" . }}
+
+{{ .Content }}
+
+{{ with site.Data.stats }}
+<div class="home-stats" style="display:flex;flex-wrap:wrap;gap:1.5em;margin:1.2em 0;padding:1em 1.2em;border:1px solid #eee;border-radius:10px;background:#fafafa">
+  <div><b style="font-size:1.4em">{{ lang.FormatNumberCustom 0 .reads }}</b><br><span style="color:#888;font-size:.85em">总阅读量</span></div>
+  <div><b style="font-size:1.4em">{{ lang.FormatNumberCustom 0 .likes }}</b><br><span style="color:#888;font-size:.85em">总点赞</span></div>
+  <div><b style="font-size:1.4em">{{ lang.FormatNumberCustom 0 .stars }}</b><br><span style="color:#888;font-size:.85em">GitHub Star</span></div>
+  {{/* Claude Code 累计用量：由 .scripts 同级的 claude_stats.py 生成 data/claude_stats.json */}}
+  {{ with site.Data.claude_stats }}
+  <div><b style="font-size:1.4em">{{ printf "%.1f 亿" (div .monthly_tokens 1e8) }}</b><br><span style="color:#888;font-size:.85em">月均 Token</span></div>
+  <div><b style="font-size:1.4em">{{ lang.FormatNumberCustom 0 .monthly_code_lines_churn }}</b><br><span style="color:#888;font-size:.85em">月均 AI 代码</span></div>
+  {{ end }}
+  <div><b style="font-size:1.4em" id="stat-users">—</b><br><span style="color:#888;font-size:.85em">产品总用户</span></div>
+  <div><b style="font-size:1.4em" id="stat-mrr">—</b><br><span style="color:#888;font-size:.85em">平均 MRR</span></div>
+</div>
+
+{{/* publicStats：Build-in-Public 公开统计，无需鉴权。接口 60s 缓存，不高频轮询。 */}}
+<script>
+(function () {
+  "use strict";
+  var ENDPOINT = "https://api.agilebyte.cc/graphql";
+  var QUERY = "{ publicStats { avg_mrr total_users updated_at } }";
+  var usersEl = document.getElementById("stat-users");
+  var mrrEl = document.getElementById("stat-mrr");
+  if (!usersEl || !mrrEl) { return; }
+
+  // 结构化日志：who/what/when/result + 上下文
+  function log(what, result, ctx) {
+    var rec = { who: "publicStats", what: what, when: new Date().toISOString(), result: result };
+    for (var k in (ctx || {})) { rec[k] = ctx[k]; }
+    (result === "error" ? console.warn : console.log)("[publicStats]", JSON.stringify(rec));
+  }
+
+  log("fetch", "start", { endpoint: ENDPOINT });
+  fetch(ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query: QUERY })
+  })
+    .then(function (resp) {
+      if (!resp.ok) { throw new Error("HTTP " + resp.status); }
+      return resp.json();
+    })
+    .then(function (body) {
+      if (body.errors) { throw new Error("GraphQL: " + JSON.stringify(body.errors)); }
+      var s = body.data && body.data.publicStats;
+      if (!s) { throw new Error("missing publicStats"); }
+      // avg_mrr 是字符串 Decimal（人民币元），取整 + 千分位；total_users 为整数
+      usersEl.textContent = Number(s.total_users).toLocaleString("en-US");
+      mrrEl.textContent = "¥" + Math.round(parseFloat(s.avg_mrr)).toLocaleString("en-US");
+      // updated_at 反映数据新鲜度，挂为 tooltip
+      if (s.updated_at) {
+        var t = "数据更新于 " + new Date(s.updated_at).toLocaleString();
+        usersEl.title = mrrEl.title = t;
+      }
+      log("fetch", "ok", { total_users: s.total_users, avg_mrr: s.avg_mrr, updated_at: s.updated_at });
+    })
+    .catch(function (err) {
+      // 接口异常：保留占位符「—」，不打断首页其余内容
+      log("fetch", "error", { error: String(err && err.message || err) });
+    });
+})();
+</script>
+{{ end }}
+
+<ul>
+  {{/* 排除热度聚合页（推文/知乎 · 热度）：派生页不进首页时间线列表 */}}
+  {{ range (where (where .Site.RegularPages "Section" "!=" "") "Params.hot" "!=" true) }}
+  <li>
+    <span class="date">{{ with .Params.dateLabel }}{{ . }}{{ else }}{{ .Date.Format "2006/01/02" }}{{ end }}</span>
+    <span class="sep">·</span>
+    <a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
+    {{ with .Params.reads }}<span class="reads" title="阅读量" style="color:#aaa;font-size:.85em">👁 {{ lang.FormatNumberCustom 0 . }}</span>{{ end }}
+    {{ with .Params.likes }}<span class="likes" title="点赞量" style="color:#aaa;font-size:.85em">❤️ {{ lang.FormatNumberCustom 0 . }}</span>{{ end }}
+  </li>
+  {{ end }}
+</ul>
+
+{{ partial "footer.html" . }}

@@ -1,0 +1,9 @@
+{
+  "name": "neko-blog",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {},
+  "dependencies": {
+    "@jackwener/opencli": "^1.8.4"
+  }
+}

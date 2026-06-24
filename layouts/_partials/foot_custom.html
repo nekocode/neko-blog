@@ -1,0 +1,38 @@
+{{/* 全站浮动「回到顶部」按钮：滚动超过一屏才显示，纯 CSS 过渡 + 极简 JS 切换可见性 */}}
+<style>
+.back-to-top{position:fixed;right:1.2em;bottom:1.2em;width:2.6em;height:2.6em;
+  display:flex;align-items:center;justify-content:center;border-radius:50%;
+  background:#333;color:#fff;font-size:1em;line-height:1;cursor:pointer;border:none;
+  box-shadow:0 2px 8px rgba(0,0,0,.2);opacity:0;visibility:hidden;
+  transition:opacity .25s,visibility .25s;z-index:50}
+.back-to-top.show{opacity:.85;visibility:visible}
+.back-to-top:hover{opacity:1}
+@media print{.back-to-top{display:none}}
+</style>
+<button class="back-to-top" aria-label="回到顶部" title="回到顶部">⬆️</button>
+<script>
+(function () {
+  var btn = document.querySelector(".back-to-top");
+  if (!btn) return;
+  // 滚动超过一屏高度才显示，避免短页面打扰
+  function toggle() {
+    if (window.scrollY > window.innerHeight) btn.classList.add("show");
+    else btn.classList.remove("show");
+  }
+  window.addEventListener("scroll", toggle, { passive: true });
+  btn.addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+  toggle();
+})();
+</script>
+
+{{/* 全站 ICP 备案号（工信部要求展示并链接到备案系统） */}}
+<style>
+.site-icp{text-align:center;margin:1.5em 0 .5em;color:#aaa;font-size:.8em}
+.site-icp a{color:#aaa;text-decoration:none}
+.site-icp a:hover{text-decoration:underline}
+</style>
+<div class="site-icp">
+  <a href="https://beian.miit.gov.cn/" rel="nofollow noopener" target="_blank">粤ICP备20038185号</a>
+</div>

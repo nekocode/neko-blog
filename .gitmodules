@@ -1,0 +1,6 @@
+[submodule "external/resume"]
+	path = external/resume
+	url = git@github.com:nekocode/resume.git
+[submodule "external/neko-island"]
+	path = external/neko-island
+	url = git@github.com:nekocode/neko-island.git

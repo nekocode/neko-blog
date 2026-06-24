@@ -1,0 +1,84 @@
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="theme-color" content="#1a1340" />
+
+{{/* ===== SEO / 社交传播 meta（主题 hugo-xmin 自带 head 极简，统一在此注入） ===== */}}
+{{- $desc := (or .Description .Summary site.Params.description) | plainify | chomp | truncate 200 -}}
+{{- $ogTitle := cond .IsHome site.Title .Title -}}
+{{- $ogImage := "og-image.png" | absURL -}}
+<meta name="description" content="{{ $desc }}" />
+{{- with site.Params.author }}
+<meta name="author" content="{{ . }}" />
+{{- end }}
+<link rel="canonical" href="{{ .Permalink }}" />
+
+{{/* Open Graph：微信/知乎/Telegram/Facebook 等读此生成分享卡片 */}}
+<meta property="og:site_name" content="{{ site.Title }}" />
+<meta property="og:locale" content="zh_CN" />
+<meta property="og:type" content="{{ cond .IsPage "article" "website" }}" />
+<meta property="og:title" content="{{ $ogTitle }}" />
+<meta property="og:description" content="{{ $desc }}" />
+<meta property="og:url" content="{{ .Permalink }}" />
+<meta property="og:image" content="{{ $ogImage }}" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+{{/* Twitter：og:image 为 1200×630 大图 → summary_large_image（猫居中，微信方裁也不丢主体） */}}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{{ $ogTitle }}" />
+<meta name="twitter:description" content="{{ $desc }}" />
+<meta name="twitter:image" content="{{ $ogImage }}" />
+
+{{/* RSS 自动发现：让阅读器/浏览器嗅探到订阅源 */}}
+{{- range .AlternativeOutputFormats }}
+<link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" title="{{ site.Title }}" />
+{{- end }}
+
+{{/* 结构化数据 JSON-LD：首页 WebSite+Person；文章页 BlogPosting。用 jsonify 保证转义安全 */}}
+{{- if .IsHome }}
+{{- $ld := dict "@context" "https://schema.org" "@type" "WebSite" "name" site.Title "url" site.BaseURL "inLanguage" "zh-CN" "author" (dict "@type" "Person" "name" site.Params.author "url" site.BaseURL) }}
+<script type="application/ld+json">{{ $ld | jsonify | safeJS }}</script>
+{{- else if .IsPage }}
+{{- $ld := dict "@context" "https://schema.org" "@type" "BlogPosting" "headline" .Title "url" .Permalink "inLanguage" "zh-CN" "mainEntityOfPage" .Permalink "author" (dict "@type" "Person" "name" site.Params.author) "image" $ogImage "description" $desc }}
+{{- if not .Date.IsZero }}{{ $ld = merge $ld (dict "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00")) }}{{ end }}
+{{- if not .Lastmod.IsZero }}{{ $ld = merge $ld (dict "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00")) }}{{ end }}
+<script type="application/ld+json">{{ $ld | jsonify | safeJS }}</script>
+{{- end }}
+
+<link rel="stylesheet" href="{{ "css/sources.css" | relURL }}" />
+<style>
+/* 正文图片统一加圆角 + 灰色边框（公众号 / post 文章；推文图已在各自样式中处理） */
+main img {
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  /* 限高：竖屏截图等长图最多占视口 70%，保持宽高比不裁剪，缩小后居中（参考 X/Telegram 做法） */
+  max-height: 70vh;
+  width: auto;
+  display: block;
+  margin-inline: auto;
+}
+/* 多图同段：≥2 张图并排成响应式网格，带间距、窄屏自动换行（单图段落不命中，保留上面的限高居中）。
+   并排时尺寸由列宽决定，故解除 max-height、改为占满列宽。*/
+main p:has(> img + img) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  align-items: start;
+}
+main p:has(> img + img) img {
+  width: 100%;
+  max-height: none;
+  margin: 0;
+}
+/* 图注：公众号 figure>figcaption 还原后的图片说明（居中、灰、小，沿用公众号观感） */
+main figure { margin: 1em 0; }
+main figcaption {
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+  margin-top: 5px;
+}
+</style>

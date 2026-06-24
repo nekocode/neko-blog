@@ -1,0 +1,34 @@
+# Hugo 构建产物 / 缓存
+/public/
+/resources/_gen/
+.hugo_build.lock
+hugo_stats.json
+
+# Node 依赖
+/node_modules
+.pnp.js
+
+# Python 缓存（.scripts/ 下的脚本）
+__pycache__/
+*.py[cod]
+.venv/
+
+# 工具缓存
+.impeccable/
+
+# 系统 / 编辑器
+.DS_Store
+*.pem
+
+# 日志
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# 本地文档 / 规划
+*.local.md
+findings.md
+progress.md
+task_plan.md
+.planning

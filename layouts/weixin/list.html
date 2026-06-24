@@ -1,0 +1,39 @@
+{{ partial "header.html" . }}
+
+<h1>{{ .Title | markdownify }}</h1>
+
+{{ .Content }}
+
+<ul>
+  {{ range .Pages }}
+  <li>
+    <span class="date">{{ .Date.Format "2006/01/02" }}</span>
+    <span class="sep">·</span>
+    <a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
+    {{ with .Params.reads }}<span class="reads" title="阅读量" style="color:#aaa;font-size:.85em">👁 {{ lang.FormatNumberCustom 0 . }}</span>{{ end }}
+  </li>
+  {{ end }}
+</ul>
+
+<script>
+// 公众号二维码弹窗防溢出：hover/focus 时测量弹窗位置，若超出视口左右边则水平回拉，
+// 设 --wx-shift 让弹窗与箭头各自补偿（箭头反向，仍对准公众号名）。轻量、无依赖。
+(function () {
+  var PAD = 8; // 与屏幕边的最小留白
+  function fit(link) {
+    var qr = link.querySelector('.wx-qr');
+    if (!qr) return;
+    qr.style.setProperty('--wx-shift', '0px'); // 先归零再测，得到居中态位置
+    var r = qr.getBoundingClientRect(), vw = document.documentElement.clientWidth, shift = 0;
+    if (r.right > vw - PAD) shift = (vw - PAD) - r.right;       // 溢出右边 → 左拉
+    else if (r.left < PAD) shift = PAD - r.left;                // 溢出左边 → 右推
+    if (shift) qr.style.setProperty('--wx-shift', Math.round(shift) + 'px');
+  }
+  document.querySelectorAll('.wx-acct').forEach(function (link) {
+    link.addEventListener('mouseenter', function () { fit(link); });
+    link.addEventListener('focus', function () { fit(link); });
+  });
+})();
+</script>
+
+{{ partial "footer.html" . }}

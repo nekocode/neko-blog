@@ -1,0 +1,21 @@
+{{- /* 半年导航条（推文/知乎共用）：数据驱动，从同 section 各页 front matter 派生，
+       不再由 render_*.py 写死进 md。每期带条数（.Params.count），当前页高亮。
+       class 前缀按 section 切换：twitter->tw，其余（zhihu）->zh。 */ -}}
+{{- $cur := . -}}
+{{- $prefix := cond (eq .Section "twitter") "tw" "zh" -}}
+{{- /* 仅半年页（有 dateLabel）；热度页 hot*.md 无 dateLabel，自动排除，不污染半年导航 */ -}}
+{{- $pages := (where (where site.RegularPages "Section" .Section) "Params.dateLabel" "!=" nil).ByDate.Reverse -}}
+<nav class="{{ $prefix }}-nav">
+{{- range $pages -}}
+  {{- $label := replace (.Params.dateLabel | default "") "/" " " -}}
+  {{- $cnt := "" -}}
+  {{- with .Params.count -}}{{- $cnt = printf " <span class=\"%s-nav-n\">%v</span>" $prefix . -}}{{- end -}}
+  {{- if eq . $cur -}}
+    <span class="{{ $prefix }}-nav-cur">{{ $label }}{{ $cnt | safeHTML }}</span>
+  {{- else -}}
+    <a href="{{ .RelPermalink }}">{{ $label }}{{ $cnt | safeHTML }}</a>
+  {{- end -}}
+{{- end -}}
+</nav>
+{{- $full := replace (replace ($cur.Params.dateLabel | default "") "/上" " 上半年") "/下" " 下半年" -}}
+<div class="{{ $prefix }}-count">{{ $full }} · {{ $cur.Params.count }} 条</div>

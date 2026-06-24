@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Locale }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ .Title }} | {{ .Site.Title }}</title>
+    <link rel="stylesheet" href="{{ "css/style.css" | relURL }}" />
+    <link rel="stylesheet" href="{{ "css/fonts.css" | relURL }}" />
+    {{ partial "head_custom.html" . }}
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      {{ range .Site.Menus.main }}
+      {{/* latestOf：声明式让菜单指向该 section 日期最新的页（如推文/知乎按半年分页）。
+           内容即真相源，无需在 hugo.yaml 写死期号；section 为空时退回 .URL 兜底。 */}}
+      {{ $url := .URL }}
+      {{ with .Params.latestOf }}
+        {{ with (where site.RegularPages "Section" .).ByDate.Reverse }}
+          {{ $url = (index . 0).RelPermalink }}
+        {{ end }}
+      {{ end }}
+      <li><a href="{{ $url | relURL }}">{{ .Name }}</a></li>
+      {{ end }}
+    </ul>
+    <hr/>
+    </nav>

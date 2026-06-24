@@ -1,0 +1,13 @@
+{
+  "window_days": 90,
+  "period_days": 30,
+  "sessions": 2194,
+  "assistant_msgs": 114806,
+  "edits": 9687,
+  "monthly_tokens": 4940132183,
+  "monthly_code_lines_added": 87983,
+  "monthly_code_lines_removed": 22115,
+  "monthly_code_lines_churn": 110098,
+  "window_total_tokens": 14820396549,
+  "window_code_lines_churn": 330294
+}

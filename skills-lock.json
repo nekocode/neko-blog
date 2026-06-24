@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "opencli-autofix": {
+      "source": "jackwener/opencli",
+      "sourceType": "github",
+      "skillPath": "skills/opencli-autofix/SKILL.md",
+      "computedHash": "b3e3fa585ed63fbb26610e36e5c3ec32497c1c35333614aa1f937c2d70b72965"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+/* 各内容源（推文/知乎/GitHub/公众号）的共享样式。
+   单一真相源：曾被 render_*.py 复制进每个 md 的 <style>，现集中于此，全站 <head> 加载一次，
+   消除 37 份重复与飘移。卡片/导航的 HTML 仍由 render_*.py 或 Hugo partial 生成，仅样式集中。 */
+
+/* ---------- 内容源页内切换标签（时间线 / 热度，推文+知乎共用） ---------- */
+.tw-tabs,.zh-tabs{display:flex;gap:.4em;margin:1em 0 .2em;font-size:.95em}
+.tw-tabs a,.zh-tabs a,.tw-tab-cur,.zh-tab-cur{padding:.3em .9em;border:1px solid #e5e5e5;border-radius:6px;text-decoration:none}
+.tw-tabs a,.zh-tabs a{color:#555}
+.tw-tabs a:hover,.zh-tabs a:hover{background:#f5f5f5}
+.tw-tab-cur{background:#333;color:#fff;border-color:#333;font-weight:600}
+.zh-tab-cur{background:#056de8;color:#fff;border-color:#056de8;font-weight:600}
+
+/* ---------- 推文 twitter ---------- */
+.tw-wrap{max-width:42em;margin:0 auto}
+.tw-nav{display:flex;flex-wrap:wrap;gap:.4em;margin:1em 0;font-size:.9em}
+.tw-nav a,.tw-nav .tw-nav-cur{padding:.25em .6em;border:1px solid #e5e5e5;border-radius:6px;text-decoration:none}
+.tw-nav a{color:#555}
+.tw-nav a:hover{background:#f5f5f5}
+.tw-nav .tw-nav-cur{background:#333;color:#fff;border-color:#333;font-weight:600}
+.tw-nav-n{color:#aaa;font-size:.85em}
+.tw-nav-cur .tw-nav-n{color:#ccc}
+.tw-count{color:#888;font-size:.85em;margin:.3em 0 1em}
+.tw-card{border:1px solid #e5e5e5;border-radius:10px;padding:1em 1.2em;margin:1em 0;background:#fff}
+.tw-head{font-size:.85em;margin-bottom:.5em}
+.tw-permalink{color:#888;text-decoration:none}
+.tw-permalink:hover{text-decoration:underline}
+.tw-text{line-height:1.6;word-wrap:break-word}
+.tw-imgs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:.7em 0}
+.tw-imgs.single{grid-template-columns:1fr}
+.tw-imgs img{width:100%;border-radius:8px;display:block;border:1px solid #eee}
+.tw-quote{border:1px solid #e5e5e5;border-radius:8px;padding:.6em .9em;margin:.7em 0;background:#fafafa;font-size:.95em}
+.tw-qlink{text-decoration:none;color:inherit}
+.tw-qname{font-weight:600}.tw-qhandle{color:#888;font-weight:400}
+.tw-qtext{margin-top:.3em;line-height:1.5}
+.tw-metrics{display:flex;gap:1.1em;margin-top:.7em;font-size:.85em;color:#666}
+
+/* ---------- 知乎 zhihu ---------- */
+.zh-wrap{max-width:42em;margin:0 auto}
+.zh-nav{display:flex;flex-wrap:wrap;gap:.4em;margin:1em 0;font-size:.9em}
+.zh-nav a,.zh-nav .zh-nav-cur{padding:.25em .6em;border:1px solid #e5e5e5;border-radius:6px;text-decoration:none}
+.zh-nav a{color:#555}
+.zh-nav a:hover{background:#f5f5f5}
+.zh-nav .zh-nav-cur{background:#056de8;color:#fff;border-color:#056de8;font-weight:600}
+.zh-nav-n{color:#aaa;font-size:.85em}
+.zh-nav-cur .zh-nav-n{color:#cfe0fb}
+.zh-count{color:#888;font-size:.85em;margin:.3em 0 1em}
+.zh-card{border:1px solid #e5e5e5;border-radius:10px;padding:1em 1.2em;margin:1em 0;background:#fff}
+.zh-head{display:flex;align-items:center;gap:.6em;font-size:.85em;margin-bottom:.5em}
+.zh-kind{padding:.05em .5em;border-radius:4px;font-size:.85em;color:#fff}
+.zh-kind.zh-article{background:#056de8}.zh-kind.zh-answer{background:#0f8a5f}.zh-kind.zh-pin{background:#999}
+.zh-permalink{color:#888;text-decoration:none}
+.zh-permalink:hover{text-decoration:underline}
+.zh-title{margin:.2em 0 .5em;font-size:1.1em}
+.zh-title a{color:#1a1a1a;text-decoration:none}
+.zh-title a:hover{text-decoration:underline}
+.zh-text{line-height:1.7;word-wrap:break-word}
+.zh-text img{max-width:100%;height:auto;border-radius:6px;margin:.5em 0}
+.zh-text p{margin:.6em 0}
+.zh-text h2,.zh-text h3,.zh-text h4{margin:.9em 0 .4em;font-size:1.05em}
+.zh-text ul,.zh-text ol{margin:.6em 0;padding-left:1.5em}
+.zh-text blockquote{margin:.6em 0;padding:.2em .9em;border-left:3px solid #ddd;color:#555}
+.zh-text pre{overflow:auto;border-radius:8px;padding:.8em 1em;font-size:.85em;line-height:1.5}
+.zh-text :not(pre) > code{background:#f2f2f2;padding:.1em .35em;border-radius:4px;font-size:.9em}
+.zh-metrics{display:flex;gap:1.1em;margin-top:.8em;font-size:.85em;color:#666}
+
+/* ---------- GitHub ---------- */
+.gh-tabs{display:flex;flex-wrap:wrap;gap:.4em;margin:.2em 0 1em}
+.gh-tab{padding:.2em .6em;border:1px solid #e5e5e5;border-radius:6px;text-decoration:none;color:#555;font-size:.85em}
+a.gh-tab:hover{background:#f5f5f5}
+.gh-tab-cur{background:#333;color:#fff;border-color:#333;font-weight:600}
+.gh-tab-n{color:#aaa;font-size:.85em}
+.gh-tab-cur .gh-tab-n{color:#ccc}
+/* 顶层来源 tab（仓库 / PR）：比 tag tab 高一级，更醒目 */
+.gh-stabs{display:flex;gap:.5em;margin:.2em 0 .9em}
+.gh-stab{padding:.3em .9em;border:1px solid #e5e5e5;border-radius:6px;text-decoration:none;color:#555;font-weight:600}
+a.gh-stab:hover{background:#f5f5f5}
+.gh-stab-cur{background:#24292f;color:#fff;border-color:#24292f}
+.gh-stab .gh-tab-n{color:#aaa;font-weight:400}
+.gh-stab-cur .gh-tab-n{color:#ccc}
+.gh-pr-title{font-weight:600;text-decoration:none;word-break:break-word;overflow-wrap:anywhere}
+.gh-pr-title:hover{text-decoration:underline}
+.gh-pr-star{color:#666;white-space:nowrap;font-size:.85em;margin-left:.4em}
+.gh-summary{color:#888;font-size:.9em;margin:.3em 0 .8em}
+.gh-table{width:100%;border-collapse:collapse;font-size:.9em}
+.gh-table th,.gh-table td{padding:.4em .6em;border-bottom:1px solid #f0f0f0;text-align:left;vertical-align:top}
+.gh-table th{color:#888;font-weight:600;font-size:.85em;border-bottom:2px solid #e5e5e5}
+.gh-c-idx{color:#bbb;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.gh-tags{margin-top:.35em;display:flex;flex-wrap:wrap;gap:.3em}
+.gh-tag{font-size:.72em;color:#3a5bbf;background:#eef2ff;border:1px solid #dde3fb;border-radius:4px;padding:.05em .4em;text-decoration:none}
+.gh-tag:hover{background:#dde3fb}
+.gh-name{font-weight:600;text-decoration:none;white-space:nowrap}
+.gh-name:hover{text-decoration:underline}
+.gh-home{text-decoration:none;color:#0969da;font-size:.85em}
+.gh-archived{font-size:.68em;color:#9a6700;background:#fff8c5;border:1px solid #eedc82;border-radius:4px;padding:.02em .3em}
+.gh-c-num{white-space:nowrap;color:#666;text-align:right}
+.gh-c-lang{white-space:nowrap;color:#666}
+.gh-lang{display:inline-flex;align-items:center;gap:.3em}
+.gh-lang i{width:.65em;height:.65em;border-radius:50%;display:inline-block}
+.gh-c-desc{color:#444;min-width:14em}
+
+/* ---------- 公众号 weixin ---------- */
+.wx-stats{display:flex;gap:1.1em;color:#888;font-size:.85em;margin:.2em 0 1em}
+
+/* 公众号名 → 链接 + hover 弹出二维码（纯 CSS） */
+.wx-acct{position:relative;text-decoration:none;color:#0969da}
+.wx-acct:hover{text-decoration:underline}
+/* --wx-shift：JS 测得溢出屏幕时的水平回拉量（默认 0，纯 CSS 时居中） */
+.wx-qr{position:absolute;left:50%;top:100%;transform:translateX(calc(-50% + var(--wx-shift,0px)));
+  margin-top:8px;display:none;z-index:10;background:#fff;border:1px solid #e5e5e5;border-radius:8px;
+  padding:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);width:180px;
+  flex-direction:column;align-items:center;justify-content:center}
+.wx-acct:hover .wx-qr,.wx-acct:focus .wx-qr{display:flex}
+.wx-qr img{display:block;width:164px;height:164px;border-radius:4px}
+.wx-qr em{display:block;color:#888;font-size:.78em;font-style:normal;text-align:center}
+/* 小箭头：弹窗顶部指向公众号名（反向抵消 --wx-shift，弹窗回拉后仍对准名字） */
+.wx-qr::after{content:"";position:absolute;bottom:100%;left:50%;
+  transform:translateX(calc(-50% - var(--wx-shift,0px)));
+  border:6px solid transparent;border-bottom-color:#fff}
+
+/* ---------- 时间线列表：日期 · 标题 分割符 ---------- */
+.sep{color:#ccc}

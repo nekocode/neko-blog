@@ -1,0 +1,15 @@
+{{- /* 热度页码条：列出该 section 全部热度页（.Params.hot），按 page 升序，当前页高亮。
+       数据驱动，同 period-nav 思路。class 前缀：twitter->tw，其余->zh。 */ -}}
+{{- $cur := . -}}
+{{- $prefix := cond (eq .Section "twitter") "tw" "zh" -}}
+{{- $pages := sort (where (where site.RegularPages "Section" .Section) "Params.hot" true) "Params.page" -}}
+<nav class="{{ $prefix }}-nav">
+{{- range $pages -}}
+  {{- if eq . $cur -}}
+    <span class="{{ $prefix }}-nav-cur">{{ .Params.page }}</span>
+  {{- else -}}
+    <a href="{{ .RelPermalink }}">{{ .Params.page }}</a>
+  {{- end -}}
+{{- end -}}
+</nav>
+<div class="{{ $prefix }}-count">热度 · 共 {{ $cur.Params.count }} 条 · 第 {{ $cur.Params.page }}/{{ $cur.Params.pages }} 页</div>

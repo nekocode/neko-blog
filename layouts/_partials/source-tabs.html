@@ -1,0 +1,14 @@
+{{- /* 内容源页内切换：时间线（半年分页）/ 热度（全量按热度分页）。
+       时间线 -> 该 section 最新半年页；热度 -> /<section>/hot/。
+       当前标签由 .Params.hot 决定。class 前缀同 period-nav：twitter->tw，其余->zh。 */ -}}
+{{- $section := .Section -}}
+{{- $prefix := cond (eq $section "twitter") "tw" "zh" -}}
+{{- $isHot := .Params.hot -}}
+{{- $timeline := (where (where site.RegularPages "Section" $section) "Params.dateLabel" "!=" nil).ByDate.Reverse -}}
+{{- $tl := "" -}}{{- with $timeline -}}{{- $tl = (index . 0).RelPermalink -}}{{- end -}}
+<nav class="{{ $prefix }}-tabs">
+{{- /* 时间线 tab 恒渲染：当前在热度页且存在半年页时为链接，否则为当前态/惰性态，避免静默消失 */ -}}
+{{- if and $isHot $tl -}}<a href="{{ $tl }}">时间线</a>{{- else -}}<span class="{{ $prefix }}-tab-cur">时间线</span>{{- end -}}
+{{- $hot := printf "/%s/hot/" $section | relURL -}}
+{{- if $isHot -}}<span class="{{ $prefix }}-tab-cur">热度</span>{{- else -}}<a href="{{ $hot }}">热度</a>{{- end -}}
+</nav>

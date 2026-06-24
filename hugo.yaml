@@ -1,0 +1,90 @@
+baseURL: https://nekocode.cn/
+locale: zh-CN
+languageCode: zh-CN
+defaultContentLanguage: zh
+title: Nekocode 的博客
+theme: hugo-xmin
+
+# 让 Hugo 生成 /robots.txt（默认 allow all + 指向 sitemap），供爬虫发现 sitemap
+enableRobotsTXT: true
+
+permalinks:
+  blog: /blog/:year/:month/:day/:slug/
+
+# 禁用全部 taxonomy（tags/categories）：顶部已有各板块入口，GitHub 另有自定义 /github/tag/ 过滤页
+taxonomies: {}
+
+menu:
+  main:
+    - name: Home
+      url: ""
+      weight: 1
+    - name: 公众号
+      url: weixin/
+      weight: 2
+    # latestOf：菜单构建时自动指向该 section 日期最新的半年页（见 header.html）；url 为 section 空时的兜底
+    - name: 推文
+      url: twitter/
+      weight: 3
+      params:
+        latestOf: twitter
+    - name: 知乎
+      url: zhihu/
+      weight: 4
+      params:
+        latestOf: zhihu
+    - name: Blog
+      url: blog/
+      weight: 5
+    - name: GitHub
+      url: github/
+      weight: 6
+    - name: 简历
+      url: resume/
+      weight: 7
+    - name: 🏖️
+      url: island/
+      weight: 8
+    - name: RSS
+      url: index.xml
+      weight: 9
+
+params:
+  # 站点级默认描述（页面无自有 description 时回退到此）；用于 meta description / OG / 搜索摘要
+  description: Nekocode 的个人博客 —— 聚合公众号文章、X 推文、知乎、技术博客与开源项目。
+  author: Nekocode
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
+# 把 external/resume 子模块挂载进主站：about 页直接渲染简历，更新子模块即生效，零复制
+module:
+  mounts:
+    # content：保留主站默认内容；用简历的 _index.md 覆盖 about 页
+    - source: content
+      target: content
+    - source: external/resume/content/_index.md
+      target: content/_resume.md
+    # assets：简历的 SCSS（fontello 字体已 base64 内嵌，无需外部字体文件）
+    - source: external/resume/assets
+      target: assets
+    # layouts：保留主站默认布局；并入简历的 shortcodes（contact / item）
+    - source: layouts
+      target: layouts
+    - source: external/resume/layouts/shortcodes
+      target: layouts/shortcodes
+    # static：保留主站默认静态目录；并把 neko-island 的 webpack 产物挂为 /_island/
+    # （声明任一 static 挂载会覆盖默认，故须显式补回 static → static）
+    # dist 由 deploy.sh 在 hugo 构建前 npm run build 生成
+    - source: static
+      target: static
+    - source: external/neko-island/dist
+      target: static/_island
+
+# /_resume/：简历裸页，套用「纸张」布局（被 /resume/ 用 iframe 内嵌）
+cascade:
+  - _target:
+      path: /_resume
+    layout: resume

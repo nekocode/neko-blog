@@ -1,0 +1,8 @@
+{{ partial "header.html" . }}
+<h1>{{ .Title | markdownify }}</h1>
+<div class="zh-wrap">
+{{ partial "source-tabs.html" . }}
+{{ if .Params.hot }}{{ partial "hot-nav.html" . }}{{ else }}{{ partial "period-nav.html" . }}{{ end }}
+{{ .Content }}
+</div>
+{{ partial "footer.html" . }}
