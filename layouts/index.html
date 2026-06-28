@@ -15,8 +15,25 @@
   <div><b style="font-size:1.4em" id="stat-users">—</b><br><span style="color:#888;font-size:.85em">产品总用户</span></div>
   <div><b style="font-size:1.4em" id="stat-mrr">—</b><br><span style="color:#888;font-size:.85em">平均 MRR</span></div>
 </div>
+{{ end }}
 
-{{/* publicStats：Build-in-Public 公开统计，无需鉴权。接口 60s 缓存，不高频轮询。 */}}
+<ul>
+  {{/* 排除热度聚合页（推文/知乎 · 热度）：派生页不进首页时间线列表 */}}
+  {{ range (where (where .Site.RegularPages "Section" "!=" "") "Params.hot" "!=" true) }}
+  <li>
+    <span class="date">{{ with .Params.dateLabel }}{{ . }}{{ else }}{{ .Date.Format "2006/01/02" }}{{ end }}</span>
+    <span class="sep">·</span>
+    <a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
+    {{ with .Params.reads }}<span class="reads" title="阅读量" style="color:#aaa;font-size:.85em">👁 {{ lang.FormatNumberCustom 0 . }}</span>{{ end }}
+    {{ with .Params.likes }}<span class="likes" title="点赞量" style="color:#aaa;font-size:.85em">❤️ {{ lang.FormatNumberCustom 0 . }}</span>{{ end }}
+  </li>
+  {{ end }}
+</ul>
+
+{{/* publicStats：Build-in-Public 公开统计，无需鉴权。接口 60s 缓存，不高频轮询。
+     脚本必须置于列表 <ul> 之后：内联脚本受「CSS 阻塞 JS」规则约束，head 样式表未加载完前不执行，
+     而未执行的同步脚本会阻塞 HTML 解析，导致其后的列表迟迟无法渲染（刷新时列表空白闪烁的根因）。 */}}
+{{ with site.Data.stats }}
 <script>
 (function () {
   "use strict";
@@ -64,18 +81,5 @@
 })();
 </script>
 {{ end }}
-
-<ul>
-  {{/* 排除热度聚合页（推文/知乎 · 热度）：派生页不进首页时间线列表 */}}
-  {{ range (where (where .Site.RegularPages "Section" "!=" "") "Params.hot" "!=" true) }}
-  <li>
-    <span class="date">{{ with .Params.dateLabel }}{{ . }}{{ else }}{{ .Date.Format "2006/01/02" }}{{ end }}</span>
-    <span class="sep">·</span>
-    <a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
-    {{ with .Params.reads }}<span class="reads" title="阅读量" style="color:#aaa;font-size:.85em">👁 {{ lang.FormatNumberCustom 0 . }}</span>{{ end }}
-    {{ with .Params.likes }}<span class="likes" title="点赞量" style="color:#aaa;font-size:.85em">❤️ {{ lang.FormatNumberCustom 0 . }}</span>{{ end }}
-  </li>
-  {{ end }}
-</ul>
 
 {{ partial "footer.html" . }}

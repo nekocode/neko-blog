@@ -197,7 +197,7 @@ def main():
         print(f"  {label(p):14} {len(bucket_tweets(p)):3} 条  {period_date(p)}  -> {url_of(p)}")
     print(f"最新页（菜单指向）: {url_of(periods[0])}")
 
-    # ---- 热度页：全量按浏览量降序，每页≈30 条；话题整体保留不跨页拆分 ----
+    # ---- 热度页：全量按浏览量降序，按 HOT_PER_PAGE 分页；话题整体保留不跨页拆分（故单页略超额）----
     # 无 date/dateLabel：故被菜单 latestOf 与半年导航 period-nav 自动排除，零回归。
     hot_items = sorted(items, key=item_heat, reverse=True)
     hot_pages, cur, cur_n = [], [], 0

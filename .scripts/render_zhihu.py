@@ -171,7 +171,7 @@ for p in periods:
     print(f"  {label(p):14} {len(buckets[p]):3} 条  {period_date(p)}  -> {url_of(p)}")
 print(f"最新页（菜单指向）: {url_of(periods[0])}")
 
-# ---- 热度页：全量按赞数降序，每页固定 30 条（hot.md=/zhihu/hot/，hot-N.md=/zhihu/hot/N/）----
+# ---- 热度页：全量按赞数降序，按 HOT_PER_PAGE 分页（hot.md=/zhihu/hot/，hot-N.md=/zhihu/hot/N/）----
 # 跨类型口径：回答/文章取 voteup，想法取 reaction（同 render_stats 的赞数来源）。
 # 无 date/dateLabel：故被菜单 latestOf 与半年导航 period-nav 自动排除，零回归。
 HOT_PER_PAGE = 30

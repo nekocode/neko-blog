@@ -5,8 +5,8 @@
   - Token：每条 assistant 消息 message.usage 的 input/output/cache_creation/cache_read 累加。
   - 代码改动：tool_use 中 Write/Edit/MultiEdit，按行数算新增(+)与删除(-)，churn = 增 + 删。
 
-口径：只统计**最近 90 天**（按事件 timestamp 过滤），再除以 3 得**30 天月均**——
-反映当下的活跃速率，而非被早期历史稀释的全程总量。
+口径：只统计窗口期内（按事件 timestamp 过滤，窗口/周期见 WINDOW_DAYS / PERIOD_DAYS），
+再摊成月均——反映当下的活跃速率，而非被早期历史稀释的全程总量。
 
 去重：fork / resume 会把同一事件复制进多个转录文件，按事件级唯一 uuid 跨文件去重，避免重复计数。
 
@@ -29,8 +29,8 @@ import lib  # noqa: E402
 USAGE_FIELDS = ("input_tokens", "output_tokens",
                 "cache_creation_input_tokens", "cache_read_input_tokens")
 EDIT_TOOLS = {"Edit", "Write", "MultiEdit"}
-WINDOW_DAYS = 90   # 统计窗口：只看最近 90 天
-PERIOD_DAYS = 30   # 平均周期：换算成 30 天月均（窗口 / 周期 = 3 个月）
+WINDOW_DAYS = 90   # 统计窗口：只看最近这段天数内的事件
+PERIOD_DAYS = 30   # 月均周期：把窗口总量摊成「每 PERIOD_DAYS 天」的均量
 
 
 def parse_ts(s: str):
@@ -119,7 +119,7 @@ def run(root: str, projects_dir: str, write: bool) -> dict:
 
     window_tokens = sum(acc[f] for f in USAGE_FIELDS)
     window_churn = acc["added"] + acc["removed"]
-    months = WINDOW_DAYS / PERIOD_DAYS  # 90 / 30 = 3，把窗口总量摊成 30 天月均
+    months = WINDOW_DAYS / PERIOD_DAYS  # 窗口含几个周期：把窗口总量摊成月均
 
     def monthly(x):
         return round(x / months)
@@ -130,12 +130,12 @@ def run(root: str, projects_dir: str, write: bool) -> dict:
         "sessions": sessions,
         "assistant_msgs": acc["assistant_msgs"],
         "edits": acc["edits"],
-        # 30 天月均（供首页展示）
+        # 月均（供首页展示）
         "monthly_tokens": monthly(window_tokens),
         "monthly_code_lines_added": monthly(acc["added"]),
         "monthly_code_lines_removed": monthly(acc["removed"]),
         "monthly_code_lines_churn": monthly(window_churn),
-        # 窗口（90 天）原始总量，便于核对
+        # 窗口期原始总量，便于核对
         "window_total_tokens": window_tokens,
         "window_code_lines_churn": window_churn,
     }
