@@ -21,7 +21,7 @@
           {{ $url = (index . 0).RelPermalink }}
         {{ end }}
       {{ end }}
-      <li><a href="{{ $url | relURL }}">{{ .Name }}</a></li>
+      <li><a href="{{ $url | relURL }}"{{ with .Params.target }} target="{{ . }}" rel="noopener"{{ end }}>{{ .Name }}</a></li>
       {{ end }}
     </ul>
     <hr/>

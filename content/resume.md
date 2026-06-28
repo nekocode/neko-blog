@@ -3,23 +3,28 @@ title: 简历
 ---
 
 <iframe id="resume-frame" src="/_resume/" title="简历" scrolling="no"
-  style="width:100%;border:1px solid #ddd;border-radius:4px;display:block"></iframe>
+  style="width:100%;border:1px solid #ddd;border-radius:4px;display:block;min-height:100vh"></iframe>
 
 <script>
-// 同源 iframe：读取源页真实高度并回填，使其随内容自适应（含窗口缩放、断点切换）
+// 同源 iframe：用 ResizeObserver 观测源页 body，任何回流（窗口缩放、断点切换、
+// 字体/图片异步加载、动态内容）都自动回填高度。body 自然塌缩，无需归零 hack。
 (function () {
   var frame = document.getElementById("resume-frame");
-  function fit() {
+  var observer = null;
+  function bind() {
     try {
-      // 先归零让内容塌缩，否则 scrollHeight 会被旧的 iframe 高度撑住（变宽不回缩）
-      frame.style.height = "0";
       var doc = frame.contentDocument || frame.contentWindow.document;
-      frame.style.height = doc.documentElement.scrollHeight + "px";
+      var body = doc.body;
+      if (observer) observer.disconnect();
+      observer = new ResizeObserver(function () {
+        frame.style.height = body.scrollHeight + "px";
+      });
+      observer.observe(body);
     } catch (error) {
-      console.error("[resume] iframe 自适应失败", error);
+      console.error("[resume] iframe 自适应绑定失败", error);
     }
   }
-  frame.addEventListener("load", fit);
-  window.addEventListener("resize", fit);
+  // 每次导航/重载 iframe 都重新绑定（旧 observer 随旧 document 失效）
+  frame.addEventListener("load", bind);
 })();
 </script>

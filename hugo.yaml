@@ -45,9 +45,14 @@ menu:
     - name: 🏖️
       url: island/
       weight: 8
+    - name: 🎮
+      url: https://www.emu666.com/
+      weight: 9
+      params:
+        target: _blank
     - name: RSS
       url: index.xml
-      weight: 9
+      weight: 10
 
 params:
   # 站点级默认描述（页面无自有 description 时回退到此）；用于 meta description / OG / 搜索摘要
