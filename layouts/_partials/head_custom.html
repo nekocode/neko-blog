@@ -49,36 +49,4 @@
 {{- end }}
 
 <link rel="stylesheet" href="{{ "css/sources.css" | relURL }}" />
-<style>
-/* 正文图片统一加圆角 + 灰色边框（公众号 / post 文章；推文图已在各自样式中处理） */
-main img {
-  border-radius: 8px;
-  border: 1px solid #e5e5e5;
-  /* 限高：竖屏截图等长图最多占视口 60%，保持宽高比不裁剪，缩小后居中（参考 X/Telegram 做法） */
-  max-height: 60vh;
-  width: auto;
-  display: block;
-  margin-inline: auto;
-}
-/* 多图同段：≥2 张图并排成响应式网格，带间距、窄屏自动换行（单图段落不命中，保留上面的限高居中）。
-   并排时尺寸由列宽决定，故解除 max-height、改为占满列宽。*/
-main p:has(> img + img) {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 10px;
-  align-items: start;
-}
-main p:has(> img + img) img {
-  width: 100%;
-  max-height: none;
-  margin: 0;
-}
-/* 图注：公众号 figure>figcaption 还原后的图片说明（居中、灰、小，沿用公众号观感） */
-main figure { margin: 1em 0; }
-main figcaption {
-  text-align: center;
-  color: #888;
-  font-size: 14px;
-  margin-top: 5px;
-}
-</style>
+{{/* 正文图片样式已统一收敛到 css/sources.css 的「全站正文图片」单一真相源，不再内联于此 */}}

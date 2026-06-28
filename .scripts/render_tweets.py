@@ -47,8 +47,9 @@ def render_text(text, has_media):
 
 def render_images(paths):
     if not paths: return ''
+    # 裸 <img>，不套 <a>：全站正文图统一不跳转（与知乎/公众号/博客一致）
     imgs = ''.join(
-        f'<a href="{IMG_BASE}{p}" target="_blank"><img src="{IMG_BASE}{p}" loading="lazy" alt=""></a>'
+        f'<img src="{IMG_BASE}{p}" loading="lazy" alt="">'
         for p in paths)
     cls = 'tw-imgs' + (' single' if len(paths) == 1 else '')
     return f'<div class="{cls}">{imgs}</div>'

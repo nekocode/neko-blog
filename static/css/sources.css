@@ -2,6 +2,26 @@
    单一真相源：曾被 render_*.py 复制进每个 md 的 <style>，现集中于此，全站 <head> 加载一次，
    消除 37 份重复与飘移。卡片/导航的 HTML 仍由 render_*.py 或 Hugo partial 生成，仅样式集中。 */
 
+/* ---------- 全站正文图片（单一真相源，避免各源飘移）----------
+   博客/公众号(main img)、知乎(.zh-text img)、推文/引用图(.tw-imgs img) 统一观感：
+   浅灰边框 + 8px 圆角 + 长图限高 600px 等比缩放（不裁剪不变形）。
+   布局差异仅按需覆盖：流式正文居中留白 / 公众号并排多图网格 / 推文图保留网格无外边距。 */
+main img,
+.zh-text img,
+.tw-imgs img {
+  max-width: 100%; width: auto; height: auto; max-height: 600px;
+  border: 1px solid #e5e5e5; border-radius: 8px; display: block;
+}
+/* 流式正文（博客/公众号/知乎）：块级居中 + 上下留白。推文图在网格里，外边距由 gap 控制，不在此列。 */
+main img,
+.zh-text img { margin: .8em auto; }
+/* 公众号文章「同段并排多图」：≥2 图响应式网格、占满列宽、解除限高（尺寸由列宽决定），窄屏自动换行。 */
+main p:has(> img + img) { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; align-items: start; }
+main p:has(> img + img) img { width: 100%; max-height: none; margin: 0; }
+/* 图注：公众号 figure>figcaption 还原后的图片说明（居中、灰、小） */
+main figure { margin: 1em 0; }
+main figcaption { text-align: center; color: #888; font-size: 14px; margin-top: 5px; }
+
 /* ---------- 内容源页内切换标签（时间线 / 热度，推文+知乎共用） ---------- */
 .tw-tabs,.zh-tabs{display:flex;gap:.4em;margin:1em 0 .2em;font-size:.95em}
 .tw-tabs a,.zh-tabs a,.tw-tab-cur,.zh-tab-cur{padding:.3em .9em;border:1px solid #e5e5e5;border-radius:6px;text-decoration:none}
@@ -27,8 +47,7 @@
 .tw-text{line-height:1.6;word-wrap:break-word}
 .tw-imgs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:.7em 0}
 .tw-imgs.single{grid-template-columns:1fr}
-/* width:auto（而非 100% 定宽）+ max-height:60vh：长图等比缩到视口 60% 高，不裁剪不压扁。 */
-.tw-imgs img{max-width:100%;width:auto;height:auto;max-height:60vh;border-radius:8px;display:block;border:1px solid #eee}
+/* .tw-imgs img 的尺寸/边框/圆角/限高见顶部「全站正文图片」单一真相源 */
 .tw-quote{border:1px solid #e5e5e5;border-radius:8px;padding:.6em .9em;margin:.7em 0;background:#fafafa;font-size:.95em}
 .tw-qlink{text-decoration:none;color:inherit}
 .tw-qname{font-weight:600}.tw-qhandle{color:#888;font-weight:400}
@@ -62,7 +81,7 @@
 .zh-title a{color:#1a1a1a;text-decoration:none}
 .zh-title a:hover{text-decoration:underline}
 .zh-text{line-height:1.7;word-wrap:break-word}
-.zh-text img{max-width:100%;height:auto;max-height:60vh;border-radius:6px;margin:.5em 0}
+/* .zh-text img 的尺寸/边框/圆角/限高/居中见顶部「全站正文图片」单一真相源 */
 .zh-text p{margin:.6em 0}
 .zh-text h2,.zh-text h3,.zh-text h4{margin:.9em 0 .4em;font-size:1.05em}
 .zh-text ul,.zh-text ol{margin:.6em 0;padding-left:1.5em}
