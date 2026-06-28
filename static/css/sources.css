@@ -27,7 +27,8 @@
 .tw-text{line-height:1.6;word-wrap:break-word}
 .tw-imgs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:.7em 0}
 .tw-imgs.single{grid-template-columns:1fr}
-.tw-imgs img{width:100%;border-radius:8px;display:block;border:1px solid #eee}
+/* width:auto（而非 100% 定宽）+ max-height:60vh：长图等比缩到视口 60% 高，不裁剪不压扁。 */
+.tw-imgs img{max-width:100%;width:auto;height:auto;max-height:60vh;border-radius:8px;display:block;border:1px solid #eee}
 .tw-quote{border:1px solid #e5e5e5;border-radius:8px;padding:.6em .9em;margin:.7em 0;background:#fafafa;font-size:.95em}
 .tw-qlink{text-decoration:none;color:inherit}
 .tw-qname{font-weight:600}.tw-qhandle{color:#888;font-weight:400}
@@ -61,7 +62,7 @@
 .zh-title a{color:#1a1a1a;text-decoration:none}
 .zh-title a:hover{text-decoration:underline}
 .zh-text{line-height:1.7;word-wrap:break-word}
-.zh-text img{max-width:100%;height:auto;border-radius:6px;margin:.5em 0}
+.zh-text img{max-width:100%;height:auto;max-height:60vh;border-radius:6px;margin:.5em 0}
 .zh-text p{margin:.6em 0}
 .zh-text h2,.zh-text h3,.zh-text h4{margin:.9em 0 .4em;font-size:1.05em}
 .zh-text ul,.zh-text ol{margin:.6em 0;padding-left:1.5em}
