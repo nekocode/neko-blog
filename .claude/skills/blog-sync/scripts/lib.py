@@ -176,8 +176,13 @@ def http_get_text(url: str, timeout: int = 60) -> str:
 
 
 def opencli_cmd(root: str) -> list:
-    """优先用项目本地 opencli（node_modules/.bin），回退到全局 PATH。"""
+    """强制使用项目本地 opencli（node_modules/.bin）。
+    必须本地：twitter tweets adapter 经 patch-package 打了补丁（输出 conversation_id
+    等回复链路字段），全局 opencli 没有该补丁，会导致话题串联功能静默失效。"""
     local = os.path.join(root, "node_modules", ".bin", "opencli")
-    if os.path.exists(local):
-        return [local]
-    return ["npx", "--no-install", "opencli"]
+    if not os.path.exists(local):
+        raise FileNotFoundError(
+            f"未找到项目本地 opencli：{local}。请在项目根执行 `npm install`"
+            "（postinstall 会经 patch-package 应用 twitter adapter 补丁）。"
+        )
+    return [local]

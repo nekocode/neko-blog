@@ -1,0 +1,24 @@
+diff --git a/node_modules/@jackwener/opencli/clis/twitter/tweets.js b/node_modules/@jackwener/opencli/clis/twitter/tweets.js
+index 3726813..0e16a49 100644
+--- a/node_modules/@jackwener/opencli/clis/twitter/tweets.js
++++ b/node_modules/@jackwener/opencli/clis/twitter/tweets.js
+@@ -173,6 +173,10 @@ function extractTweet(result, seen) {
+         is_retweet: isRetweet,
+         created_at: legacy.created_at || '',
+         url: `https://x.com/${screenName}/status/${tw.rest_id}`,
++        // 回复链路：conversation_id 是话题分组主键，in_reply_to_status_id 是链序（备用）。
++        // 用于把同一作者的自串推文渲染为 Thread。
++        conversation_id: legacy.conversation_id_str || undefined,
++        in_reply_to_status_id: legacy.in_reply_to_status_id_str || undefined,
+         ...extractMedia(legacy),
+         quoted_tweet: extractQuotedTweet(tw),
+     };
+@@ -226,7 +230,7 @@ cli({
+         { name: 'limit', type: 'int', default: 20, help: 'Max tweets to return' },
+         { name: 'top-by-engagement', type: 'int', default: 0, help: 'When set to N>0, re-rank the tweets by weighted engagement (likes×1 + retweets×3 + replies×2 + bookmarks×5 + log10(views+1)×0.5) and return the top N. Default 0 keeps the chronological ordering.' },
+     ],
+-    columns: ['id', 'author', 'created_at', 'is_retweet', 'text', 'likes', 'retweets', 'replies', 'views', 'url', 'has_media', 'media_urls', 'media_posters', 'quoted_tweet'],
++    columns: ['id', 'author', 'created_at', 'is_retweet', 'text', 'likes', 'retweets', 'replies', 'views', 'url', 'has_media', 'media_urls', 'media_posters', 'quoted_tweet', 'conversation_id', 'in_reply_to_status_id'],
+     func: async (page, kwargs) => {
+         const limit = Math.max(1, Math.min(200, kwargs.limit || 20));
+         const rawUsername = String(kwargs.username ?? '').trim();

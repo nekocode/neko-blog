@@ -2,8 +2,13 @@
   "name": "neko-blog",
   "version": "0.1.0",
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "postinstall": "patch-package"
+  },
   "dependencies": {
     "@jackwener/opencli": "^1.8.4"
+  },
+  "devDependencies": {
+    "patch-package": "^8.0.0"
   }
 }

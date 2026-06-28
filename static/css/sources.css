@@ -33,6 +33,13 @@
 .tw-qname{font-weight:600}.tw-qhandle{color:#888;font-weight:400}
 .tw-qtext{margin-top:.3em;line-height:1.5}
 .tw-metrics{display:flex;gap:1.1em;margin-top:.7em;font-size:.85em;color:#666}
+/* 话题 Thread：同一自串对话的多条推文成组。回复卡左缩进，竖线在缩进 gutter 中连接相邻卡片。 */
+.tw-thread{margin:1em 0}
+.tw-thread .tw-card{margin:.5em 0}
+.tw-thread .tw-card:first-child{margin-top:0}
+.tw-thread .tw-card:last-child{margin-bottom:0}
+.tw-thread .tw-reply{position:relative;margin-left:1.5em}
+.tw-thread .tw-reply::before{content:"";position:absolute;left:-0.85em;top:-0.5em;height:calc(100% + 0.5em);width:2px;background:#ddd}
 
 /* ---------- 知乎 zhihu ---------- */
 .zh-wrap{max-width:42em;margin:0 auto}

@@ -35,8 +35,11 @@ def check(root: str) -> dict:
         ok, msg = _ok(["gh", "auth", "status"])
         report["github"] = {"ready": ok, "reason": "ok" if ok else f"gh 未登录: {msg}"}
 
-    oc = lib.opencli_cmd(root)
-    oc_ok, oc_msg = _ok(oc + ["--version"])
+    try:
+        oc = lib.opencli_cmd(root)
+        oc_ok, oc_msg = _ok(oc + ["--version"])
+    except FileNotFoundError as e:
+        oc_ok, oc_msg = False, str(e)
     if not oc_ok:
         for src in ("twitter", "weixin"):
             report[src] = {"ready": False, "reason": f"opencli 不可用: {oc_msg}"}
